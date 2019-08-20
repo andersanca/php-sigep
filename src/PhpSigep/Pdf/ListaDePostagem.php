@@ -35,8 +35,10 @@ class ListaDePostagem
         $this->init();
     }
 
-    public function render($dest='', $fileName = '')
+    public function render($dest='', $fileName = '',$via2 = false)
     {
+
+        $this->pdf->setTitle($fileName);
         $cacheKey = md5(serialize($this->plp) . $this->idPlpCorreios . get_class($this));
         if ($pdfContent = Bootstrap::getConfig()->getCacheInstance()->getItem($cacheKey)) {
             header('Content-Type: application/pdf');
@@ -58,14 +60,38 @@ class ListaDePostagem
             $pdf->Ln();
             $pdf->Ln();
             $this->writeBottom();
+            $pdf->Ln();
+            $pdf->Ln();
             $this->writeFooter();
+
+
+            $pdf    = $this->pdf;
+            $k      = $pdf->k;
+            $wInner = $pdf->w - $pdf->lMargin - $pdf->rMargin;
+            if($via2) {
+                $this->addPage();
+                $this->writeTitle($k, $pdf, $wInner);
+                $this->writeHeader($pdf, $k, $wInner);
+                $pdf->Ln();
+                $this->writeList();
+
+                $pdf->Ln();
+                $pdf->Ln();
+                $this->writeBottom();
+                $pdf->Ln();
+                $pdf->Ln();
+                $this->writeFooter(2);
+            }
+
+
 
             if($dest == 'S'){
                return $pdf->Output('',$dest);
             }
             else{
-                $pdf->Output($fileName, $dest);
                 Bootstrap::getConfig()->getCacheInstance()->setItem($cacheKey, $pdf->buffer);
+                return $pdf->Output($fileName, $dest);  // TROCADO POR RETURN AO INVES DE ECHO ( CAKEPHP RESPONSE ) - ANDERSON 27/06/19
+                ///Bootstrap::getConfig()->getCacheInstance()->setItem($cacheKey, $pdf->buffer);
             }
         }
     }
@@ -99,17 +125,17 @@ class ListaDePostagem
         if ($remetente->getComplemento()) {
             $remeAddress .= ' - ' . $remetente->getComplemento();
         }
-        $remeAddress .= ' - Bairro: ' . $remetente->getBairro();
-        $remeAddress .= ' - Cidade: ' . $remetente->getCidade() . '/' . $remetente->getUf();
+        $remeAddress .= ' ' . $remetente->getBairro();
+        $remeAddress .= "\n" . $remetente->getCidade() . '/' . $remetente->getUf().' CEP: '.$remetente->getCep();
 
         $pdf->setLineHeightPadding(50 / $k);
         $this->labeledText($pdf, 'Nº da lista:', $this->idPlpCorreios, $wHeaderCols);
-        $this->labeledText($pdf, 'Cliente:', $remetente->getNome(), $wHeaderCols, 1);
+        $this->labeledText($pdf, 'Remetente:', $remetente->getRemetente(), $wHeaderCols +10, 1);
         $this->labeledText($pdf, 'Contrato:', $plp->getAccessData()->getNumeroContrato(), $wHeaderCols);
-        $this->labeledText($pdf, 'Cod. adm.:', $plp->getAccessData()->getCodAdministrativo(), $wHeaderCols);
+        $this->labeledText($pdf, 'Cliente:',$remetente->getNome()  , $wHeaderCols);
+        $this->labeledText($pdf, 'Telefone:', $remetente->getTelefone() , $wHeaderCols, 1);
+        $this->labeledText($pdf, 'Cod. adm.: ',$plp->getAccessData()->getCodAdministrativo(), $wHeaderCols, 1);
         $this->labeledText($pdf, 'Cartão:', $plp->getAccessData()->getCartaoPostagem(), $wHeaderCols, 1);
-        $this->labeledText($pdf, 'Remetente:', $remetente->getNome(), $wHeaderCols, 1);
-        $this->labeledText($pdf, 'Telefone:', $remetente->getTelefone(), $wHeaderCols, 1);
         $yAboveFone = $pdf->y;
         $pdf->y -= ($pdf->getLineHeigth() * 2);
         $pdf->x += $wHeaderCols;
@@ -298,7 +324,7 @@ class ListaDePostagem
         $pdf->SetX($xCol2);
         $pdf->CellXp($wCol2, 'CEP', 'C');
         $pdf->SetX($xCol3);
-        $pdf->CellXp($wCol3, 'Peso(g)', 'C');
+        $pdf->CellXp($wCol3, 'Peso', 'C');
         $pdf->SetX($xCol4);
         $pdf->CellXp($wCol4, 'AR', 'C');
         $pdf->SetX($xCol5);
@@ -312,7 +338,7 @@ class ListaDePostagem
         $pdf->SetXY($xCol9, $y2);
         $pdf->CellXp($wCol9, 'Volume', 'C');
         $pdf->SetX($xCol10);
-        $pdf->CellXp($wCol10, 'Destinatário', 'C');
+        $pdf->CellXp($wCol10, 'Serviço', 'C');
     }
 
     /**
@@ -344,10 +370,12 @@ class ListaDePostagem
     private function writeListBody($pdf, $k, $y1, $y2, $xCol1, $wCol1, $xCol2, $wCol2, $xCol8, $wCol8, $xCol3, $wCol3, $xCol4, $wCol4, $xCol5, $wCol5, $xCol6, $wCol6, $xCol7, $wCol7, $xCol9, $wCol9, $xCol10, $wCol10)
     {
         $pdf->setLineHeightPadding(20 / $k);
-        $lineHeigth    = $pdf->getLineHeigth();
+        $lineHeigth    = $pdf->getLineHeigth()+0.05;
         $plp           = $this->plp;
         $objetoPostais = $plp->getEncomendas();
 
+        $var = 0.13;
+        
         $i = 1;
         $pdf->SetFont('Courier', '', 8);
         foreach ($objetoPostais as $objetoPostal) {
@@ -384,8 +412,8 @@ class ListaDePostagem
                 $pdf->SetFont('Courier', '', 8);
             }
 
-            $y1 += $lineHeigth;
-            $y2 += $lineHeigth;
+            $y1 += $lineHeigth +$var;
+            $y2 += $lineHeigth +$var;
             $pdf->SetY($y1);
 
             $temAr          = false;
@@ -393,40 +421,63 @@ class ListaDePostagem
             $temVd          = false;
             $valorDeclarado = null;
             foreach ($objetoPostal->getServicosAdicionais() as $servicoAdicional) {
-                $valorDeclarado = $servicoAdicional->getValorDeclarado();
                 if ($servicoAdicional->is(ServicoAdicional::SERVICE_AVISO_DE_RECEBIMENTO)) {
                     $temAr = true;
                 } else if ($servicoAdicional->is(ServicoAdicional::SERVICE_MAO_PROPRIA)) {
                     $temMp = true;
-                } else if ($valorDeclarado>0) {
-                    $temVd = true;
+                } else if ($servicoAdicional->is(ServicoAdicional::SERVICE_VALOR_DECLARADO_PAC) || $servicoAdicional->is(ServicoAdicional::SERVICE_VALOR_DECLARADO_SEDEX)) {
+                    $temVd          = true;
+                    $valorDeclarado = $servicoAdicional->getValorDeclarado();
                 }
             }
+
 
             if ($i++ % 2 != 0) {
                 $fc = 225;
                 $pdf->SetFillColor($fc, $fc, $fc);
-                $pdf->SetXY($xCol1, $y2);
-                $pdf->Cell($pdf->w - $pdf->rMargin - $pdf->lMargin, $lineHeigth, '', 0, 0, '', true);
+                $pdf->SetXY($xCol1, $y2-$var);
+                
+                $pdf->Cell($pdf->w - $pdf->rMargin - $pdf->lMargin, $lineHeigth+$var-0.05, '', 0, 0, '', true);
+                
             }
 
-            $pdf->SetXY($xCol1, $y2);
+
+            $pdf->SetXY($xCol1, $y2 - $var);
+            
+            
             $etiqueta = $objetoPostal->getEtiqueta();
             if ($etiqueta) {
                 $etiquetaComDv = $etiqueta->getEtiquetaComDv();
             } else {
                 $etiquetaComDv = '';
             }
-            $pdf->CellXp($wCol1, $etiquetaComDv);
+            
+            $pdf->CellXp($wCol1, $etiquetaComDv,'',0);
+            
+            $pdf->SetXY($xCol1, $y2);
+            $pdf->SetFont('Courier', 'B', 8);
+
+            $str     = 'Destinatario ';
+            $stringW = $pdf->GetStringWidthXd($str);
+            
+            $pdf->CellXp($stringW, $str,'',0);
+            $pdf->SetFont('Courier', '', 8);
+            
+            $pdf->SetXY($stringW+0.4, $y2);
+            $pdf->CellXp($wCol10, $objetoPostal->getDestinatario()->getNome(),'');
+
+
+            $pdf->SetY($y2 - $var);
             $destino = $objetoPostal->getDestino();
             if ($destino instanceof \PhpSigep\Model\DestinoNacional) {
                 $pdf->SetX($xCol2);
                 $pdf->CellXp($wCol2, preg_replace('/[^\d]/', '', $destino->getCep()), 'C');
-                $pdf->SetXY($xCol8, $y2);
+                $pdf->SetXY($xCol8, $y2 - $var);
                 $pdf->MultiCellXp($wCol8, $destino->getNumeroNotaFiscal(), null, 0, 'C');
             }
-            $pdf->SetXY($xCol3, $y2);
-            $pdf->CellXp($wCol3, round($objetoPostal->getPeso()*1000), 'C');
+            
+            $pdf->SetXY($xCol3, $y2 - $var);
+            $pdf->CellXp($wCol3, $objetoPostal->getPeso(), 'C');
             $pdf->SetX($xCol4);
             $pdf->CellXp($wCol4, ($temAr ? 'S' : 'N'), 'C');
             $pdf->SetX($xCol5);
@@ -435,11 +486,14 @@ class ListaDePostagem
             $pdf->CellXp($wCol6, ($temVd ? 'S' : 'N'), 'C');
             $pdf->SetX($xCol7);
             $pdf->MultiCellXp($wCol7, ($temVd ? $valorDeclarado : ''), null, 0, 'C');
-            $pdf->SetXY($xCol9, $y2);
+            $pdf->SetXY($xCol9, $y2 - $var);
             $pdf->CellXp($wCol9, '1/1', 'C');
             $pdf->SetX($xCol10);
-            $pdf->CellXp($wCol10, $objetoPostal->getDestinatario()->getNome(), 'C');
+            $pdf->CellXp($wCol10, $objetoPostal->getServicoDePostagem()->getCodigo().' - '.$objetoPostal->getServicoDePostagem()->getNome(), 'C');
+            
         }
+        $pdf->ln();
+        
     }
 
     /**
@@ -502,30 +556,30 @@ class ListaDePostagem
         $pdf->CellXp($lineW, 'Obs: 1º via p/ a Unidade de Postagem e 2º via p/ o cliente', 'C');
     }
 
-    private function writeFooter()
+    private function writeFooter($page = 1)
     {
         $pdf = $this->pdf;
 
 
         $pdf->AutoPageBreak = false;
         $wInner             = $pdf->w - $pdf->lMargin - $pdf->rMargin;
-        $dataEmissao        = "Emitido em " . date('d/m/Y \à\s H:i:s');
+        $dataEmissao        = "Emitido em " . date('d/m/Y ');
 
-        foreach ($pdf->pages as $pNumber => $page) {
-            $pdf->page = $pNumber;
+        //foreach ($pdf->pages as $pNumber => $page) {
+            //$pdf->page = $pNumber;
 
             $pdf->SetFont('Arial', '', 8);
 
-            $pdf->x = $pdf->lMargin;
-            $pdf->y = $pdf->h - $pdf->bMargin;
+            //$pdf->x = $pdf->lMargin;
+            //$pdf->y = $pdf->h - $pdf->bMargin;
 
             $pdf->CellXp($wInner, $dataEmissao);
 
             $pdf->x = $pdf->lMargin;
-            $str    = "Página " . $pNumber . " de " . count($pdf->pages);
+            $str    = "Página ".$page." de " . count($pdf->pages);
 
             $pdf->CellXp($wInner, $str, 'R');
-        }
+        //}
     }
 
     private function addPage()

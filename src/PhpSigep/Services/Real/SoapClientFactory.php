@@ -68,7 +68,8 @@ class SoapClientFactory
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION, 
                 "connection_timeout"    => 180, 
-                'stream_context'        => stream_context_create($opts) 
+                'stream_context'        => stream_context_create($opts),
+                'cache_wsdl'            => 0,
             );
 
             self::$_soapClient = new \SoapClient($wsdl, $params);
@@ -139,6 +140,7 @@ class SoapClientFactory
                 "connection_timeout"    => 180,
                 'stream_context'        => stream_context_create($opts)
             );
+
 
             self::$_soapCalcPrecoPrazo = new \SoapClient($wsdl, $params);
         }
