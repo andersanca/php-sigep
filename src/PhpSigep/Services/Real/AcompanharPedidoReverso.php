@@ -5,8 +5,6 @@ use PhpSigep\Model\AcompanharPedidoReversoColeta;
 use PhpSigep\Model\AcompanharPedidoReversoHistorico;
 use PhpSigep\Model\AcompanharPedidoReversoObjeto;
 use PhpSigep\Model\AcompanharPedidoReversoResultado;
-use PhpSigep\Model\RastrearObjetoEvento;
-use PhpSigep\Model\SolicitarPostagemReversaRetorno;
 use PhpSigep\Services\Exception;
 use PhpSigep\Services\Result;
 use Symfony\Polyfill\Php56\Php56;

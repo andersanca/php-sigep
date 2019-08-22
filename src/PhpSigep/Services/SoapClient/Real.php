@@ -237,4 +237,32 @@ class Real implements ServiceInterface
         return $service->execute($numeroEtiqueta, $idPlp, $usuario, $senha);
     }
 
+    /**
+     * Pede para o WebService do Correios cancelar pedido de Logistica reversa
+     * @param $codAdministrativo
+     * @param $numeroPedido
+     * @param $tipo
+     * @return \PhpSigep\Services\Result<\PhpSigep\Model\CancelarObjetoResposta[]>
+     */
+
+    public function cancelarPedidoReverso($codAdministrativo, $numeroPedido, $tipo)
+    {
+        $service = new ServiceImplementation\CancelarPedidoReverso();
+        return $service->execute($codAdministrativo, $numeroPedido, $tipo);
+    }
+
+    /**
+     * Pede para o WebService do Correios cancelar pedido de Logistica reversa
+     * @param $codAdministrativo
+     * @param $numeroPedido
+     * @param $tipo
+     * @return \PhpSigep\Services\Result<\PhpSigep\Model\CancelarObjetoResposta[]>
+     */
+
+    public function revalidarPrazoAutorizacaoPostagemReverso($codAdministrativo, $numeroPedido, $qtdDias)
+    {
+        $service = new ServiceImplementation\RevalidarPrazoAutorizacaoPostagemReverso();
+        return $service->execute($codAdministrativo, $numeroPedido, $qtdDias);
+    }
+
 }
