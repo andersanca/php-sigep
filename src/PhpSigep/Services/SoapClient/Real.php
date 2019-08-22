@@ -185,7 +185,16 @@ class Real implements ServiceInterface
         $service = new ServiceImplementation\RastrearObjeto();
         return $service->execute($params);
     }
-
+    /**
+     *
+     * @param \PhpSigep\Model\RastrearObjeto $params
+     * @return \PhpSigep\Services\Result<\PhpSigep\Model\RastrearObjetoResultado[]>
+     */
+    public function acompanharPedidoReverso(\PhpSigep\Model\AcompanharPedidoReverso $params)
+    {
+        $service = new ServiceImplementation\AcompanharPedidoReverso();
+        return $service->execute($params);
+    }
     /**
      * @param $numeroCartaoPostagem
      * @param $login
