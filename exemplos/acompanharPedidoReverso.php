@@ -45,8 +45,7 @@ $acompanhar->setNumeroPedido('1041506455');
 
 $phpSigep = new \PhpSigep\Services\SoapClient\Real();
 $result = $phpSigep->acompanharPedidoReverso($acompanhar);
-echo "<pre>";
-print_r($result);
+echo "<pre> OKKKK";
 
 
 print_r($result->getResult()->getColeta());
