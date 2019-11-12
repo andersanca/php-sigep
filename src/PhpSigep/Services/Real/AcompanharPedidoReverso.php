@@ -87,12 +87,23 @@ class AcompanharPedidoReverso
                     }
 
 
+                    if (!is_array($objeto->objeto))
+                        $objeto->objeto = array($objeto->objeto);
+
+                    $lastObjeto = $objeto->objeto[0];
+
+
                     $objetoR = new AcompanharPedidoReversoObjeto();
-                    $objetoR->setNumeroEtiqueta($objeto->objeto->numero_etiqueta);
-                    $objetoR->setControleObjetoCliente($objeto->objeto->controle_objeto_cliente);
-                    $objetoR->setUltimoStatus($objeto->objeto->ultimo_status);
-                    $objetoR->setDescricao($objeto->objeto->descricao_status);
-                    $objetoR->setDataHora($objeto->objeto->data_ultima_atualizacao . ' '.$objeto->objeto->hora_ultima_atualizacao);
+                    $objetoR->setNumeroEtiqueta($lastObjeto->numero_etiqueta);
+                    $objetoR->setControleObjetoCliente($lastObjeto->controle_objeto_cliente);
+                    $objetoR->setUltimoStatus($lastObjeto->ultimo_status);
+                    $objetoR->setDescricao($lastObjeto->descricao_status);
+                    $objetoR->setDataHora($lastObjeto->data_ultima_atualizacao . ' '.$lastObjeto->hora_ultima_atualizacao);
+
+                    if(isset($lastObjeto->peso_real))
+                        $objetoR->setPeso($lastObjeto->peso_real);
+                    if(isset($lastObjeto->valor_postagem))
+                        $objetoR->setValorPostagem($lastObjeto->valor_postagem);
 
 
                     $coleta->setObjeto($objetoR);

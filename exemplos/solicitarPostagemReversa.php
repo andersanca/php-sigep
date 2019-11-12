@@ -72,6 +72,9 @@ $remetente->setSms('N');
 //$produto->setCodigo(116600403);
 //$produto->setTipo(0);
 //$produto->setQtd(1);
+
+
+
 $objCol = new \PhpSigep\Model\ObjCol;
 
 $objCol->setId(date('hms'));
@@ -79,6 +82,19 @@ $objCol->setNum('');
 $objCol->setEntrega('');
 $objCol->setItem(1);
 $objCol->setDesc('');
+
+
+$objCol2 = new \PhpSigep\Model\ObjCol;
+
+$objCol2->setId(date('hms'));
+$objCol2->setNum('');
+$objCol2->setEntrega('');
+$objCol2->setItem(1);
+$objCol2->setDesc('obejto 2');
+
+
+// MAIs de um objeto copiar igual etiquest, gera digito verificador (+ de uma)
+
 
 $coletasSolicitadas = new \PhpSigep\Model\ColetasSolicitadas();
 $coletasSolicitadas->setTipo('A');

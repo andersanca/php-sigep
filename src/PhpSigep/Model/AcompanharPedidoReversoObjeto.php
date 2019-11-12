@@ -30,12 +30,24 @@ class AcompanharPedidoReversoObjeto extends AbstractModel
      * @var string
      */
     protected $dataHora;
+
+    /**
+     * @var string
+     */
+    protected $valorPostagem;
+
+    /**
+     * @var string
+     */
+    protected $peso;
+
+
     /**
      * @var string
      */
     protected $error;
 
-    
+
     /**
      * @param string $descricao
      * @return $this;
@@ -123,7 +135,39 @@ class AcompanharPedidoReversoObjeto extends AbstractModel
         return $this->dataHora;
     }
 
-    
+    /**
+     * @return string
+     */
+    public function getValorPostagem()
+    {
+        return $this->valorPostagem;
+    }
+
+    /**
+     * @param string $valorPostagem
+     */
+    public function setValorPostagem($valorPostagem)
+    {
+        $this->valorPostagem = $valorPostagem;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPeso()
+    {
+        return $this->peso;
+    }
+
+    /**
+     * @param string $peso
+     */
+    public function setPeso($peso)
+    {
+        $this->peso = $peso;
+    }
+
+
 
     /**
      * @param $error
