@@ -79,13 +79,12 @@ class AcompanharPedidoReverso
 
                         $historico->setStatus($his->status);
                         $historico->setDataHora($his->data_atualizacao . ' ' . $his->hora_atualizacao);
-                        $historico->setDescricao(SoapClientFactory::convertEncoding($his->descricao_status));
-                        $historico->setObservacao(SoapClientFactory::convertEncoding(isset($his->observacao) ? $his->observacao : ''));
+                        $historico->setDescricao($his->descricao_status);
+                        $historico->setObservacao(isset($his->observacao) ? $his->observacao : '');
 
                         // Adiciona o evento ao resultado
                         $coleta->addHistorico($historico);
                     }
-
 
                     if (!is_array($objeto->objeto))
                         $objeto->objeto = array($objeto->objeto);
@@ -99,7 +98,6 @@ class AcompanharPedidoReverso
                     $objetoR->setUltimoStatus($lastObjeto->ultimo_status);
                     $objetoR->setDescricao($lastObjeto->descricao_status);
                     $objetoR->setDataHora($lastObjeto->data_ultima_atualizacao . ' '.$lastObjeto->hora_ultima_atualizacao);
-
                     if(isset($lastObjeto->peso_real))
                         $objetoR->setPeso($lastObjeto->peso_real);
                     if(isset($lastObjeto->valor_postagem))

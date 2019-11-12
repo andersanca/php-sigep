@@ -80,6 +80,7 @@ class RastrearObjeto
             ),
         );
 
+
         $result = new Result();
 
         try {
@@ -87,12 +88,19 @@ class RastrearObjeto
 
             if ($soapReturn && is_object($soapReturn) && $soapReturn->return) {
 
+
+
+
                 try {
                     if (!is_array($soapReturn->return->objeto)) {
                         $soapReturn->return->objeto = array($soapReturn->return->objeto);
                     }
 
+
+
                     $resultado = array();
+
+
 
                     foreach ($soapReturn->return->objeto as $objeto) {
 

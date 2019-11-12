@@ -25,7 +25,7 @@ $accessDataParaAmbienteDeHomologacao = new \PhpSigep\Model\AccessDataHomologacao
 
 $config = new \PhpSigep\Config();
 $config->setAccessData($accessDataParaAmbienteDeHomologacao);
-$config->setEnv(\PhpSigep\Config::ENV_PRODUCTION);
+$config->setEnv(\PhpSigep\Config::ENV_DEVELOPMENT);
 $config->setCacheOptions(
     array(
         'storageOptions' => array(
@@ -39,18 +39,9 @@ $config->setCacheOptions(
 
 \PhpSigep\Bootstrap::start($config);
 
-
-$accessDataParaAmbienteDeHomologacao->setUsuario('correioweb');
-$accessDataParaAmbienteDeHomologacao->setSenha('essence04008318');
-$accessDataParaAmbienteDeHomologacao->setCodAdministrativo('10355715');
-$accessDataParaAmbienteDeHomologacao->setNumeroContrato('9912266148');
-$accessDataParaAmbienteDeHomologacao->setCartaoPostagem('0072439971');
-$accessDataParaAmbienteDeHomologacao->setCnpjEmpresa('04008318000170');
-
-
 $acompanhar = new \PhpSigep\Model\AcompanharPedidoReverso();
 $acompanhar->setAccessData($accessDataParaAmbienteDeHomologacao);
-$acompanhar->setNumeroPedido('1279820522');
+$acompanhar->setNumeroPedido('1041506455');
 
 $phpSigep = new \PhpSigep\Services\SoapClient\Real();
 $result = $phpSigep->acompanharPedidoReverso($acompanhar);

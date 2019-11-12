@@ -47,8 +47,7 @@ class SolicitarPostagemReversa implements RealServiceInterface
             ];
 
             $soapArgs = $this->filtraValNull($soapArgs);
-
-
+//            
 //            if ($params->getColetasSolicitadas()->getProduto() == null) {
 //                unset($soapArgs['coletas_solicitadas']['produto']);
 //            }
@@ -78,10 +77,6 @@ class SolicitarPostagemReversa implements RealServiceInterface
                         ->setNumero_etiqueta($ret->numero_etiqueta)
                         ->setPrazo($ret->prazo)
                         ->setStatus_objeto($ret->status_objeto);
-
-
-
-
                     $result->setResult($SolicitarPostagemReversaRetorno);
                     return $result;
                 }
