@@ -21,7 +21,7 @@ class AvisoRecebimento{
 
     public function render($dest='', $filename = '') {
         
-        $this->_render($dest, $filename);
+        return $this->_render($dest, $filename);  // TROCADO POR RETURN AO INVES DE ECHO ( CAKEPHP RESPONSE ) - ANDERSON 27/06/19
         
     }
     
@@ -56,8 +56,10 @@ class AvisoRecebimento{
     }
 
     private function _render($dest='', $filename=''){
-        
+
+        $this->pdf->setTitle($filename);
         $this->addPage();
+        
 
         foreach ($this->plp->getEncomendas() as $key => $objetoPostal) {
             
@@ -101,7 +103,7 @@ class AvisoRecebimento{
             return $this->pdf->Output($filename,$dest);
         }
         else{
-            $this->pdf->Output($filename,$dest);
+            return $this->pdf->Output($filename,$dest);  // TROCADO POR RETURN AO INVES DE ECHO ( CAKEPHP RESPONSE ) - ANDERSON 27/06/19
         }
     }
    

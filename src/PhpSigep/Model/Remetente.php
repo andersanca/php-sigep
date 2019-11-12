@@ -104,21 +104,23 @@ class Remetente extends AbstractModel
      */
     protected $email;
 
-    /**
-     * Identificacao do remetente (CPF/CNPJ).
-     * Max length: 14
-     * @var string
-     */
-    protected $identificacao;
+    protected $remetente;
 
     /**
-     * 
-     * Max length: 1
-     * @var string
+     * @return mixed
      */
-    protected $sms;
-    protected $referencia;
+    public function getRemetente()
+    {
+        return $this->remetente;
+    }
 
+    /**
+     * @param mixed $remetente
+     */
+    public function setRemetente($remetente)
+    {
+        $this->remetente = $remetente;
+    }
     /**
      * @return string
      */

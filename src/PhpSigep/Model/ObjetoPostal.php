@@ -53,6 +53,8 @@ class ObjetoPostal extends AbstractModel
      */
     protected $observacao;
 
+    protected $contato;
+
     /**
      * @param float $cubagem
      */
@@ -197,5 +199,21 @@ class ObjetoPostal extends AbstractModel
     public function setObservacao($observacao)
     {
         $this->observacao = $observacao;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContato()
+    {
+        return $this->contato;
+    }
+
+    /**
+     * @param mixed $contato
+     */
+    public function setContato($contato)
+    {
+        $this->contato = $contato;
     }
 }

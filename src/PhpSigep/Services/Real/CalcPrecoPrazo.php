@@ -1,6 +1,7 @@
 <?php
 namespace PhpSigep\Services\Real;
 
+use phpDocumentor\Reflection\Types\Object_;
 use PhpSigep\Bootstrap;
 use PhpSigep\Model\Dimensao;
 use PhpSigep\Model\ServicoAdicional;
@@ -101,15 +102,41 @@ class CalcPrecoPrazo
         );
 
         $cacheKey = md5(serialize($soapArgs));
+        
+        
+        
         $cache    = Bootstrap::getConfig()->getCacheInstance();
+        
         if ($cachedResult = $cache->getItem($cacheKey)) {
             return unserialize($cachedResult);
         }
 
         $result = new Result();
+
+
+
+        /* ADICIONADO TEMPORARIAMENTE - ANDERSON até resolver SOAP CORREIO*/
+        /*$argsS = $soapArgs;
+        $argsS['strRetorno']= 'xml';
+        $query = http_build_query($argsS);
+        $url = 'http://ws.correios.com.br/calculador/CalcPrecoPrazo.aspx?'.$query;
+        $return = file_get_contents($url);
+        $servicos = simplexml_load_string($return);
+        $r = new Object_();
+        $r->CalcPrecoPrazoResult = new Object_();
+        $r->CalcPrecoPrazoResult->Servicos = $servicos;*/
+
+        //COMENTADO TEMPORARIAMENTE - ANDERSON até resolver SOAP CORREIO
         try {
-            $r = SoapClientFactory::getSoapCalcPrecoPrazo()->calcPrecoPrazo($soapArgs);
+
+            $a = SoapClientFactory::getSoapCalcPrecoPrazo();
+            $a->__setLocation(Bootstrap::getConfig()->getWsdlCalcPrecoPrazo()); // NECESSARIO PARA RESOLVER CORREIO PROBLEMAS WS
+            $r = $a->calcPrecoPrazo($soapArgs);
+
+
         } catch (\Exception $e) {
+            
+            
             $message = $e->getMessage();
             if ($message == 'Service Unavailable') {
                 if (!self::$calcPrecosPrazosServiceUnavailable) {
@@ -130,6 +157,7 @@ class CalcPrecoPrazo
             }
         }
 
+
         if (class_exists('\StaLib_Logger',false)) {
             \StaLib_Logger::log('Retorno SIGEP: ' . print_r($r, true));
         }
@@ -139,9 +167,15 @@ class CalcPrecoPrazo
             && $r->CalcPrecoPrazoResult->Servicos && is_object($r->CalcPrecoPrazoResult->Servicos)
         ) {
             if ($r->CalcPrecoPrazoResult->Servicos->cServico) {
+                
+                
+                /* COMENTADO TEMPORARIAMENTE - ANDERSON até resolver SOAP CORREIO */
+                
                 $servicos = $r->CalcPrecoPrazoResult->Servicos->cServico;
                 $servicos = (is_array($servicos) ? $servicos : array($servicos));
+               /* ate aqui */
 
+                
                 foreach ($servicos as $servico) {
                     $valor                 = (float)str_replace(',', '.', str_replace('.', '', $servico->Valor));
                     $valorMaoPropria       = str_replace('.', '', $servico->ValorMaoPropria);
@@ -193,6 +227,9 @@ class CalcPrecoPrazo
         $result->setResult($retorno);
 
         if (!$result->hasError()) {
+
+
+
             if ($retornoIterator->todosTemErro()) {
                 $erros = array();
                 /** @var $retItem \PhpSigep\Model\CalcPrecoPrazoResposta */
