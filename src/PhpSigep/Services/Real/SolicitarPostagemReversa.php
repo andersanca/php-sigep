@@ -68,7 +68,9 @@ class SolicitarPostagemReversa implements RealServiceInterface
                         if (!empty($r->solicitarPostagemReversa->resultado_solicitacao->descricao_erro))
                             throw new \Exception($r->solicitarPostagemReversa->resultado_solicitacao->descricao_erro, (int) $r->solicitarPostagemReversa->resultado_solicitacao->codigo_erro);
                     }
-                    $ret = $r->solicitarPostagemReversa->resultado_solicitacao;
+                    $qtdObjeto = count($params->getColetas_solicitadas()->getObj_col());
+                    $ret = (!isset($r->solicitarPostagemReversa->resultado_solicitacao->id_obj))  ? array_shift($r->solicitarPostagemReversa->resultado_solicitacao) : $r->solicitarPostagemReversa->resultado_solicitacao;
+
 
 
                     $SolicitarPostagemReversaRetorno = new SolicitarPostagemReversaRetorno();
@@ -76,6 +78,7 @@ class SolicitarPostagemReversa implements RealServiceInterface
                         ->setNumero_coleta($ret->numero_coleta)
                         ->setNumero_etiqueta($ret->numero_etiqueta)
                         ->setPrazo($ret->prazo)
+                        ->setQtd_objeto($qtdObjeto)
                         ->setStatus_objeto($ret->status_objeto);
                     $result->setResult($SolicitarPostagemReversaRetorno);
                     return $result;

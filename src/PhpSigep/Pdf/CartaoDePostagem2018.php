@@ -202,6 +202,7 @@ class CartaoDePostagem2018
                 case ServicoDePostagem::SERVICE_PAC_REVERSO_LM:
                 case ServicoDePostagem::SERVICE_PAC_CONTRATO_UO_LM:
                 case ServicoDePostagem::SERVICE_PAC_CONTRATO_AGENCIA_PAGAMENTO_NA_ENTREGA_LM:
+
                 case ServicoDePostagem::SERVICE_PAC_PAGAMENTO_NA_ENTREGA:
                 case ServicoDePostagem::SERVICE_PAC_REVERSO_CONTRATO_AGENCIA:
                 case ServicoDePostagem::SERVICE_PAC_CONTRATO_AGENCIA_TA:
