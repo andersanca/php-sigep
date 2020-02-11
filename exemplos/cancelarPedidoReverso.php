@@ -29,6 +29,6 @@ if (!$result->hasError()) {
     var_dump($pedidoReversoResult->getStatuPedido());
 }
 
-echo '<pre>';
+echo 'TESTE ANDERSON<pre>';
 var_dump($result);
 echo '</pre>';
