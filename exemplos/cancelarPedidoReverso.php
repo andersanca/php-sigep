@@ -24,11 +24,11 @@ $phpSigep = new PhpSigep\Services\SoapClient\Real();
 $result = $phpSigep->cancelarPedidoReverso($accessDataParaAmbienteDeHomologacao->getCodAdministrativo(),'1041506541','A');
 
 if (!$result->hasError()) {
-    /** @var $buscaClienteResult \PhpSigep\Model\BuscaClienteResult */
+    /** @var $buscaClienteResult \PhpSigep\Model\BuscaClienteResults */
     $pedidoReversoResult = $result->getResult();
     var_dump($pedidoReversoResult->getStatuPedido());
 }
 
-echo 'TESTE ANDERSON<pre>';
+echo 'TESTE MAC <pre>';
 var_dump($result);
 echo '</pre>';
