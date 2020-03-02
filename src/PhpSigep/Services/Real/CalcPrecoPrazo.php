@@ -31,7 +31,7 @@ class CalcPrecoPrazo
 
         $tipoEmbalagem = $params->getDimensao()->getTipo();
         $ehEnvelope    = false;
-        if ($tipoEmbalagem == Dimensao::TIPO_ENVELOPE) {
+        if ($tipoEmbalagem == Dimensao::TIPO_EaviNVELOPE) {
             $ehEnvelope       = true;
             $formatoEncomenda = 3;
             $larguraMinima    = 11;
@@ -102,11 +102,11 @@ class CalcPrecoPrazo
         );
 
         $cacheKey = md5(serialize($soapArgs));
-        
-        
-        
+
+
+
         $cache    = Bootstrap::getConfig()->getCacheInstance();
-        
+
         if ($cachedResult = $cache->getItem($cacheKey)) {
             return unserialize($cachedResult);
         }
@@ -135,8 +135,8 @@ class CalcPrecoPrazo
 
 
         } catch (\Exception $e) {
-            
-            
+
+
             $message = $e->getMessage();
             if ($message == 'Service Unavailable') {
                 if (!self::$calcPrecosPrazosServiceUnavailable) {
@@ -167,15 +167,15 @@ class CalcPrecoPrazo
             && $r->CalcPrecoPrazoResult->Servicos && is_object($r->CalcPrecoPrazoResult->Servicos)
         ) {
             if ($r->CalcPrecoPrazoResult->Servicos->cServico) {
-                
-                
+
+
                 /* COMENTADO TEMPORARIAMENTE - ANDERSON até resolver SOAP CORREIO */
-                
+
                 $servicos = $r->CalcPrecoPrazoResult->Servicos->cServico;
                 $servicos = (is_array($servicos) ? $servicos : array($servicos));
                /* ate aqui */
 
-                
+
                 foreach ($servicos as $servico) {
                     $valor                 = (float)str_replace(',', '.', str_replace('.', '', $servico->Valor));
                     $valorMaoPropria       = str_replace('.', '', $servico->ValorMaoPropria);

@@ -37,6 +37,7 @@ class ServicoDePostagem extends AbstractModel
     const SERVICE_SEDEX_REVERSO_CONTRATO_AGENCIA = '04170';
     const SERVICE_PAC_REVERSO_CONTRATO_AGENCIA = '04677';
     const SERVICE_CARTA_COM_A_FATURAR_SELO_E_SE = '12556';
+    const SERVICE_CARTA_COM_A_FATURAR_ETIQ = '10138';
     const SERVICE_CARTA_COMERCIAL_REGISTRADA_CTR_EP_MAQ_FRAN = '10707';
     // CODIGOS REFERENTES A LIMINAR ABCOMM
     const SERVICE_SEDEX_CONTRATO_GRANDES_FORMATOS_LM = '04146';
@@ -80,6 +81,7 @@ class ServicoDePostagem extends AbstractModel
         self::SERVICE_CARTA_COMERCIAL_A_FATURAR     => array('Carta Comercial a Faturar', 109480),
         self::SERVICE_CARTA_REGISTRADA              => array('Carta Registrada', 116985),
         self::SERVICE_CARTA_COM_A_FATURAR_SELO_E_SE => array('Carta Comerical Registrada a Faturar', 160104),
+        self::SERVICE_CARTA_COM_A_FATURAR_ETIQ => array('Carta Comerical Registrada Fatura Etiq', 160105),
         self::SERVICE_CARTA_COMERCIAL_REGISTRADA_CTR_EP_MAQ_FRAN           => array('Carta Comercial Registrada CTR EP MÁQ FRAN', 120072),
         self::SERVICE_SEDEX_CONTRATO_AGENCIA     => array('SEDEX Contrato Agência', 124849),
         self::SERVICE_PAC_CONTRATO_AGENCIA       => array('PAC Contrato Agência', 124884),
