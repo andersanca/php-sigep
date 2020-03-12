@@ -88,9 +88,6 @@ class RastrearObjeto
 
             if ($soapReturn && is_object($soapReturn) && $soapReturn->return) {
 
-
-
-
                 try {
                     if (!is_array($soapReturn->return->objeto)) {
                         $soapReturn->return->objeto = array($soapReturn->return->objeto);
@@ -134,14 +131,14 @@ class RastrearObjeto
                                 $evento->setDataHora(\DateTime::createFromFormat('d/m/Y H:i', $ev->data . ' ' . $ev->hora));
                                 $evento->setDescricao(SoapClientFactory::convertEncoding($ev->descricao));
                                 $evento->setDetalhe(isset($ev->destino) ? $ev->destino : '');
-                                $evento->setLocal($ev->local);
+                                $evento->setLocal(SoapClientFactory::convertEncoding($ev->local));
                                 $evento->setCodigo($ev->codigo);
-                                $evento->setCidade(isset($ev->cidade) ? $ev->cidade : '');
+                                $evento->setCidade(isset($ev->cidade) ? SoapClientFactory::convertEncoding($ev->cidade): '');
                                 $evento->setUf(isset($ev->uf) ? $ev->uf : '');
 
                                 // Sempre adiciona o recebedor ao resultado, mesmo ele sendo exibido apenas quanto 'tipo' = BDE e 'status' = 01
                                 $evento->setRecebedor(
-                                    isset($ev->recebedor) && !empty($ev->recebedor) ? trim($ev->recebedor) : ''
+                                    isset($ev->recebedor) && !empty($ev->recebedor) ? trim(SoapClientFactory::convertEncoding($ev->recebedor)) : ''
                                 );
 
                                 // Adiciona o evento ao resultado

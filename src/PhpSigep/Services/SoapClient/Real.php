@@ -25,7 +25,7 @@ class Real implements ServiceInterface
         $service = new ServiceImplementation\VerificaDisponibilidadeServico();
         return $service->execute($params);
     }
-    
+
     /**
      * @param \PhpSigep\Model\VerificaDisponibilidadeServico $params
      *
@@ -36,8 +36,8 @@ class Real implements ServiceInterface
         $service = new ServiceImplementation\SolicitarPostagemReversa();
         return $service->execute($params);
     }
-    
-    
+
+
 
     /**
      * @param $cep
@@ -160,6 +160,15 @@ class Real implements ServiceInterface
     public function calcPrecoPrazo(\PhpSigep\Model\CalcPrecoPrazo $params)
     {
         $service = new ServiceImplementation\CalcPrecoPrazo();
+        return $service->execute($params);
+    }
+    /**
+     * @param \PhpSigep\Model\CalcPrecoPrazo $params
+     * @return Result<\PhpSigep\Model\CalcPrecoPrazoResposta[]>
+     */
+    public function calcPrazo(\PhpSigep\Model\CalcPrecoPrazo $params)
+    {
+        $service = new ServiceImplementation\CalcPrazo();
         return $service->execute($params);
     }
 

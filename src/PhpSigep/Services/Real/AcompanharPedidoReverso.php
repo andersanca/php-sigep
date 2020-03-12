@@ -52,6 +52,7 @@ class AcompanharPedidoReverso
 
             $r = SoapClientFactory::getSoapReversa()->acompanharPedido($soapArgs);
 
+
             if (!$r || !is_object($r) || !isset($r->return) || ($r instanceof \SoapFault)) {
                 if ($r instanceof \SoapFault) {
                     throw $r;
