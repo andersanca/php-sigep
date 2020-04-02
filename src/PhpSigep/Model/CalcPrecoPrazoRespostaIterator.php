@@ -24,7 +24,7 @@ class CalcPrecoPrazoRespostaIterator extends \ArrayObject
             $this->todosTemErro = $this->count() > 0;
             /** @var $item \PhpSigep\Model\CalcPrecoPrazoResposta */
             foreach ($this as $item) {
-                if (!$item->hasError()) {
+                if (!$item->hasError() || $item->getValor() > 0) {
                     $this->todosTemErro = false;
                     break;
                 }
