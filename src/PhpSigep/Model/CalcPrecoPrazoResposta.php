@@ -153,7 +153,8 @@ class CalcPrecoPrazoResposta extends AbstractModel
     /**
      * @param \PhpSigep\Model\ServicoDePostagem $servico
      */
-    public function setServico(\PhpSigep\Model\ServicoDePostagem $servico)
+    //public function setServico(\PhpSigep\Model\ServicoDePostagem $servico)
+    public function setServico($servico)
     {
         $this->servico = $servico;
     }

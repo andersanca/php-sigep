@@ -66,11 +66,12 @@ class CalcPrecoPrazo
                 $avisoRecebimento = true;
             }
         }
-
         $servivosDePostagem = array();
         /** @var $servivoDePostagem ServicoDePostagem */
-        foreach ($params->getServicosPostagem() as $servivoDePostagem) {
-            $servivosDePostagem[] = $servivoDePostagem->getCodigo();
+        foreach ($params->getServicosPostagem() as $code =>$servivoDePostagem) {
+
+            //$servivosDePostagem[] = $servivoDePostagem->getCodigo();
+            $servivosDePostagem[] = $code;
         }
 
         $ajustarDimensaoMinima = $params->getAjustarDimensaoMinima();
@@ -183,7 +184,6 @@ class CalcPrecoPrazo
                     $servicos = (is_array($servicos) ? $servicos : array($servicos));
                     /* ate aqui */
 
-
                     foreach ($servicos as $servico) {
                         $valor = (float)str_replace(',', '.', str_replace('.', '', $servico->Valor));
                         $valorMaoPropria = str_replace('.', '', $servico->ValorMaoPropria);
@@ -194,7 +194,8 @@ class CalcPrecoPrazo
                         $valorValorDeclarado = (float)str_replace(',', '.', $valorValorDeclarado);
 
                         $item = new \PhpSigep\Model\CalcPrecoPrazoResposta(array(
-                            'servico' => new \PhpSigep\Model\ServicoDePostagem($servico->Codigo),
+                            //'servico' => new \PhpSigep\Model\ServicoDePostagem($servico->Codigo),
+                            'servico' => $servico->Codigo,
                             'valor' => $valor,
                             'prazoEntrega' => (int)$servico->PrazoEntrega,
                             'valorMaoPropria' => $valorMaoPropria,
@@ -203,6 +204,7 @@ class CalcPrecoPrazo
                             'entregaDomiciliar' => ($servico->EntregaDomiciliar == 'S'),
                             'entregaSabado' => ($servico->EntregaSabado == 'S'),
                         ));
+
 
 
                         $item->setErroCodigo($servico->Erro);
@@ -246,7 +248,7 @@ class CalcPrecoPrazo
                     foreach ($servicos as $servico) {
 
                         $item = new \PhpSigep\Model\CalcPrecoPrazoResposta(array(
-                            'servico' => new \PhpSigep\Model\ServicoDePostagem($servico->Codigo),
+                            'servico' => $servico->Codigo,
                             'prazoEntrega' => (int)$servico->PrazoEntrega,
                             'entregaDomiciliar' => ($servico->EntregaDomiciliar == 'S'),
                             'entregaSabado' => ($servico->EntregaSabado == 'S'),
