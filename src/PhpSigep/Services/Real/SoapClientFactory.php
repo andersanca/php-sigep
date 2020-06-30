@@ -35,7 +35,7 @@ class SoapClientFactory
     protected static $_soapAgenciaWS;
 
     /**
-     * 
+     *
      * @return \SoapClient
      * @throws SoapExtensionNotInstalled
      */
@@ -52,7 +52,8 @@ class SoapClientFactory
                 'ssl' => array(
                     //'ciphers'           =>'RC4-SHA', // comentado o parâmetro ciphers devido ao erro que ocorre quando usado dados de ambiente de produção em um servidor local conforme issue https://github.com/stavarengo/php-sigep/issues/35#issuecomment-290081903
                     'verify_peer'       =>false,
-                    'verify_peer_name'  =>false
+                    'verify_peer_name'  =>false,
+                    'allow_self_signed' => true,
                 ),
                 'http' => array(
                     'protocol_version'=>'1.1',
@@ -61,13 +62,14 @@ class SoapClientFactory
             );
             // SOAP 1.1 client
             $params = array (
-                'encoding'              => self::WEB_SERVICE_CHARSET, 
-                'verifypeer'            => false, 
-                'verifyhost'            => false, 
-                'soap_version'          => SOAP_1_1, 
+                'encoding'              => self::WEB_SERVICE_CHARSET,
+                'verifypeer'            => false,
+                'verifyhost'            => false,
+                'keep_alive'            => true,
+                'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
-                'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION, 
-                "connection_timeout"    => 180, 
+                'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
+                "connection_timeout"    => 180,
                 'stream_context'        => stream_context_create($opts),
                 'cache_wsdl'            => 0,
             );
@@ -78,7 +80,7 @@ class SoapClientFactory
         return self::$_soapClient;
     }
     /**
-     * 
+     *
      * @return \SoapClient
      * @throws SoapExtensionNotInstalled
      */
@@ -88,15 +90,15 @@ class SoapClientFactory
             if (!extension_loaded('soap')) {
                 throw new SoapExtensionNotInstalled('The "soap" module must be enabled in your PHP installation. The "soap" module is required in order to PHPSigep to make requests to the Correios WebService.');
             }
-            
+
 
             $wsdl = Bootstrap::getConfig()->getWsdlReversa();
 
             $opts = array(
                 'ssl' => array(
                     'verify_peer'       => false,
-                'verify_peer_name'  => false,
-                'allow_self_signed' => true,
+                    'verify_peer_name'  => false,
+                    'allow_self_signed' => true,
                 )
             );
 
@@ -105,6 +107,7 @@ class SoapClientFactory
             $params = array (
                 'verifypeer'         => false,
                 'verifyhost'         => false,
+                'keep_alive'         => true,
                 'connection_timeout' => 180,
                 'stream_context'     => stream_context_create($opts),
                 'wsdl_cache'         => WSDL_CACHE_BOTH,
@@ -135,6 +138,7 @@ class SoapClientFactory
                 'encoding'              => self::WEB_SERVICE_CHARSET,
                 'verifypeer'            => false,
                 'verifyhost'            => false,
+                'keep_alive'            => true,
                 'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
@@ -158,7 +162,8 @@ class SoapClientFactory
                 'ssl' => array(
                     //'ciphers'           =>'RC4-SHA', // comentado o parâmetro ciphers devido ao erro que ocorre quando usado dados de ambiente de produção em um servidor local conforme issue https://github.com/stavarengo/php-sigep/issues/35#issuecomment-290081903
                     'verify_peer'       =>false,
-                    'verify_peer_name'  =>false
+                    'verify_peer_name'  =>false,
+                    'allow_self_signed' => true,
                 ),
                 'http' => array(
                     'protocol_version'=>'1.1',
@@ -170,10 +175,11 @@ class SoapClientFactory
                 'encoding'              => self::WEB_SERVICE_CHARSET,
                 'verifypeer'            => false,
                 'verifyhost'            => false,
+                'keep_alive'            => true,
                 'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
-                "connection_timeout"    => 180,
+                "connection_timeout"    => 90,
                 'stream_context'        => stream_context_create($opts),
                 'cache_wsdl'            => 0,
             );
@@ -205,6 +211,7 @@ class SoapClientFactory
                 'encoding'              => 'UTF-8',
                 'verifypeer'            => false,
                 'verifyhost'            => false,
+                'keep_alive'            => true,
                 'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
@@ -214,7 +221,7 @@ class SoapClientFactory
                 'password'              => Bootstrap::getConfig()->getAccessData()->getIdCorreiosSenha()
             );
 
-            self::$_soapAgenciaWS = new \SoapClient($wsdl, $params);
+                self::$_soapAgenciaWS = new \SoapClient($wsdl, $params);
         }
 
         return self::$_soapAgenciaWS;
@@ -230,7 +237,7 @@ class SoapClientFactory
         $to     = 'UTF-8';
         $from   = self::WEB_SERVICE_CHARSET;
         $str = false;
-        
+
         if (function_exists('iconv')) {
             $str = iconv($from, $to . '//TRANSLIT', $string);
         } elseif (function_exists('mb_convert_encoding')) {
@@ -243,4 +250,4 @@ class SoapClientFactory
 
         return $str;
     }
-} 
+}
