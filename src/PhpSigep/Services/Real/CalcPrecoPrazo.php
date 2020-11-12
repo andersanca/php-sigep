@@ -24,6 +24,8 @@ class CalcPrecoPrazo
      */
     public function execute(\PhpSigep\Model\CalcPrecoPrazo $params)
     {
+
+
         $larguraMinima     = 0;
         $alturaMinima      = 0;
         $comprimentoMinimo = 16;
@@ -106,6 +108,7 @@ class CalcPrecoPrazo
 
 
 
+
         $cache    = Bootstrap::getConfig()->getCacheInstance();
 
         if ($cachedResult = $cache->getItem($cacheKey)) {
@@ -129,9 +132,9 @@ class CalcPrecoPrazo
 
         //COMENTADO TEMPORARIAMENTE - ANDERSON até resolver SOAP CORREIO
         try {
-
             $a = SoapClientFactory::getSoapCalcPrecoPrazo();
             $a->__setLocation(Bootstrap::getConfig()->getWsdlCalcPrecoPrazo()); // NECESSARIO PARA RESOLVER CORREIO PROBLEMAS WS
+
 
 
             if($ehEnvelope)
@@ -140,7 +143,9 @@ class CalcPrecoPrazo
                 $r = $a->calcPrecoPrazo($soapArgs);
 
 
+
         } catch (\Exception $e) {
+
 
 
             $message = $e->getMessage();
