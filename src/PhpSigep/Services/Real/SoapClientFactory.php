@@ -175,7 +175,7 @@ class SoapClientFactory
                 'encoding'              => self::WEB_SERVICE_CHARSET,
                 'verifypeer'            => false,
                 'verifyhost'            => false,
-                'keep_alive'            => true,
+                'keep_alive'            => false,
                 'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
