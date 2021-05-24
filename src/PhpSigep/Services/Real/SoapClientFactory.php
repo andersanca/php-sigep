@@ -115,6 +115,7 @@ class SoapClientFactory
                 'password' =>Bootstrap::getConfig()->getAccessData()->getSenha(),
             );
 
+
             self::$_soapClient = new \SoapClient($wsdl, $params);
         }
 
@@ -131,7 +132,12 @@ class SoapClientFactory
                     'ciphers'           =>'RC4-SHA',
                     'verify_peer'       =>false,
                     'verify_peer_name'  =>false
+                ),
+                'http' => array(
+                    'protocol_version'=>'1.1',
+                    'header' => 'Connection: Close'
                 )
+
             );
             // SOAP 1.1 client
             $params = array (
@@ -142,8 +148,9 @@ class SoapClientFactory
                 'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
-                "connection_timeout"    => 180,
-                'stream_context'        => stream_context_create($opts)
+                "connection_timeout"    => 360,
+                'stream_context'        => stream_context_create($opts),
+                'cache_wsdl'            => 0,
             );
 
 
@@ -179,7 +186,7 @@ class SoapClientFactory
                 'soap_version'          => SOAP_1_1,
                 'trace'                 => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
                 'exceptions'            => Bootstrap::getConfig()->getEnv() != Config::ENV_PRODUCTION,
-                "connection_timeout"    => 90,
+                "connection_timeout"    => 180,
                 'stream_context'        => stream_context_create($opts),
                 'cache_wsdl'            => 0,
             );
