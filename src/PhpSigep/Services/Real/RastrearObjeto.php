@@ -125,6 +125,7 @@ class RastrearObjeto
 
                             foreach ($objeto->evento as $ev) {
 
+
                                 $evento = new RastrearObjetoEvento();
                                 $evento->setTipo($ev->tipo);
                                 $evento->setStatus($ev->status);

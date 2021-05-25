@@ -718,7 +718,7 @@ class CartaoDePostagem
         $str .= $msg;
         return $str;
     }
-    
+
     public function getEnvioMesmoDestinatario() {
         return $this->envioMesmoDestinatario;
     }
@@ -726,5 +726,5 @@ class CartaoDePostagem
         $this->envioMesmoDestinatario = $envioMesmoDestinatario;
         return $this;
     }
-    
+
 }
