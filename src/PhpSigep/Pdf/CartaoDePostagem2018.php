@@ -28,7 +28,7 @@ class CartaoDePostagem2018
 	 * @var string
 	 */
 	private $logoFile;
-	
+
 	/**
 	 * Volume do pacote
 	 * @var string
@@ -71,7 +71,7 @@ class CartaoDePostagem2018
 			else{
                 Bootstrap::getConfig()->getCacheInstance()->setItem($cacheKey, $this->pdf->buffer);
 				return $this->_render($dest, $filename);  // TROCADO POR RETURN AO INVES DE ECHO ( CAKEPHP RESPONSE ) - ANDERSON 27/06/19
-				
+
 			}
 		}
 	}
@@ -83,9 +83,9 @@ class CartaoDePostagem2018
 	 */
 	private function _render ($dest='', $fileName= '')
 	{
-	    
+
 	    $this->pdf->setTitle($fileName);
-	    
+
 		$un = 72 / 25.4;
 		$wFourAreas = $this->pdf->w;
 		$hFourAreas = $this->pdf->h; //-Menos 1.5CM porque algumas impressoras não conseguem imprimir nos ultimos 1cm da página
@@ -95,7 +95,7 @@ class CartaoDePostagem2018
 		$lMarginFourAreas = 0;
 		$wInnerFourAreas = $wFourAreas - $lMarginFourAreas - $rMarginFourAreas;
 		$hInnerFourAreas = 0;
-		
+
 		$margins = array(
 			array(
 				'l' => $lMarginFourAreas,
@@ -126,7 +126,7 @@ class CartaoDePostagem2018
 		$objetosPostais = $this->plp->getEncomendas();
 		while (count($objetosPostais)) {
 			$this->pdf->AddPage();
-			
+
 			if (Bootstrap::getConfig()->getSimular()) {
 				$this->pdf->SetFont('Arial', 'B', 50);
 				$this->pdf->SetTextColor(240, 240, 240);
@@ -151,7 +151,7 @@ class CartaoDePostagem2018
 				);
 				$this->pdf->SetTextColor(0, 0, 0);
 			}
-			
+
 			$this->pdf->SetDrawColor(0, 0, 0);
             /** @var $objetoPostal ObjetoPostal */
             $objetoPostal = array_shift($objetosPostais);
@@ -165,19 +165,19 @@ class CartaoDePostagem2018
             $this->pdf->Rotate(90);
             $this->pdf->SetXY($lPosFourAreas, $tPosFourAreas+2);
             //$this->pdf->SetTextColor(51,51,51);
-            
+
             $this->pdf->SetFontSize(8);
             $this->pdf->CellXp($this->pdf->lMargin, 'henvio.com.br', 'C', 0, null, 0);
             $this->pdf->Rotate(0);
-            
+
             // Logo
             $this->pdf->SetXY($lPosFourAreas, $tPosFourAreas);
-            
-            
-            
+
+
+
             $this->setFillColor(222, 222, 222);
             if ($this->logoFile) {
-                $this->pdf->Image($this->logoFile, 5, ($this->pdf->GetY() + 2), 25, 25);
+                $this->pdf->Image($this->logoFile, 5, ($this->pdf->GetY() + 2), 25);
             }
 
             $nomeRemetente = $this->plp->getRemetente()->getNome();
@@ -206,6 +206,8 @@ class CartaoDePostagem2018
                 case ServicoDePostagem::SERVICE_PAC_PAGAMENTO_NA_ENTREGA:
                 case ServicoDePostagem::SERVICE_PAC_REVERSO_CONTRATO_AGENCIA:
                 case ServicoDePostagem::SERVICE_PAC_CONTRATO_AGENCIA_TA:
+                case ServicoDePostagem::SERVICE_PAC_CONTRATO_AGENCIA_03298:
+                case ServicoDePostagem::SERVICE_PAC_CONTRATO_AGENCIA_03085:
                     $chancela = new Pac2018(86, $this->pdf->GetY() + 13, $nomeRemetente, $accessData);
                     $_texto = 'PAC';
                     break;
@@ -229,15 +231,20 @@ class CartaoDePostagem2018
                 case ServicoDePostagem::SERVICE_SEDEX_REVERSO_CONTRATO_AGENCIA:
                 case ServicoDePostagem::SERVICE_SEDEX_CONTRATO_AGENCIA_PAGAMENTO_NA_ENTREGA_LM:
                 case ServicoDePostagem::SERVICE_SEDEX_CONTRATO_AGENCIA_TA:
+                case ServicoDePostagem::SERVICE_SEDEX_CONTRATO_AGENCIA_03220:
+                case ServicoDePostagem::SERVICE_SEDEX_CONTRATO_AGENCIA_03050:
                     $simbolo_de_encaminhamento = realpath(dirname(__FILE__)) . '/simbolo-sedex-standard.png';
                     $_texto = 'SEDEX';
                     break;
                 case ServicoDePostagem::SERVICE_SEDEX_12:
+                case ServicoDePostagem::SERVICE_SEDEX_12_CONTRATO_AGENCIA_03140:
+
                     $simbolo_de_encaminhamento = realpath(dirname(__FILE__)) . '/simbolo-sedex-expresso.png';
                     $_texto = 'SEDEX 12';
                     break;
                 case ServicoDePostagem::SERVICE_SEDEX_10:
                 case ServicoDePostagem::SERVICE_SEDEX_10_PACOTE:
+                case ServicoDePostagem::SERVICE_SEDEX_10_CONTRATO_AGENCIA_03158:
                     $simbolo_de_encaminhamento = realpath(dirname(__FILE__)) . '/simbolo-sedex-expresso.png';
                     $_texto = 'SEDEX 10';
                     break;
@@ -250,7 +257,8 @@ class CartaoDePostagem2018
                 case ServicoDePostagem::SERVICE_CARTA_REGISTRADA:
                 case ServicoDePostagem::SERVICE_CARTA_COMERCIAL_REGISTRADA_CTR_EP_MAQ_FRAN:
                 case ServicoDePostagem::SERVICE_CARTA_COM_A_FATURAR_SELO_E_SE:
-                    $simbolo_de_encaminhamento = realpath(dirname(__FILE__)) . '/simbolo-sem-especificacao.png';
+                case ServicoDePostagem::SERVICE_CARTA_REGISTRADA_AGENCIA_80250:
+                $simbolo_de_encaminhamento = realpath(dirname(__FILE__)) . '/simbolo-sem-especificacao.png';
                     $_texto = 'Carta';
                     break;
                 case ServicoDePostagem::SERVICE_SEDEX_REVERSO:
@@ -422,8 +430,8 @@ class CartaoDePostagem2018
                 $this->pdf->SetFontSize(9);
                 $this->pdf->SetXY(50, $currentY + 1);
                 $this->multiLines(50, 'AC: ' . $contato, 'L', null);
-                $lines = -3; 
-                
+                $lines = -3;
+
             }
 
             $currentY = $this->pdf->GetY();
@@ -433,7 +441,7 @@ class CartaoDePostagem2018
                 $this->pdf->SetXY(50, $currentY + 1);
                 $this->multiLines(50, 'Obs: ' . $observacoes , 'L', null);
             }
-            
+
             $destino = $objetoPostal->getDestino();
 
             // Número do CEP
@@ -482,15 +490,15 @@ class CartaoDePostagem2018
             $this->setFillColor(222, 222, 222);
             $this->pdf->gdImage($semaCodeGD, 40, 2, 25, 25);
             imagedestroy($semaCodeGD);
-			
+
 			$this->writeRemetente(0, $currentY+ $lines +$hCepBarCode, $wAddressLeftCol, $this->plp->getRemetente());
 
             $this->pdf->SetXY(0, 0);
             $this->pdf->SetDrawColor(0,0,0);
             $this->pdf->Rect(0, 0, 106.36, 140);
 		}
-		
-		return $this->pdf->Output($fileName, $dest);  
+
+		return $this->pdf->Output($fileName, $dest);
 	}
 
 	private function _($str)
@@ -528,7 +536,7 @@ class CartaoDePostagem2018
 		$l = $this->pdf->GetX();
 		$t1 = $this->pdf->GetY();
 		$l = 0;
-		
+
 		$titulo = 'DESTINATÁRIO';
 		$nomeDestinatario = substr($objetoPostal->getDestinatario()->getNome(),0,30);
 		$logradouro = $objetoPostal->getDestinatario()->getLogradouro();
@@ -564,11 +572,11 @@ class CartaoDePostagem2018
 			$cep,
 			true
 		);
-		
+
 
 		//$this->pdf->SetDrawColor(0,0,0);
 		//$this->pdf->Rect(0, $t1, 106.36, $t - $t1 + 25);
-		
+
 		return $t;
 	}
 
@@ -630,20 +638,20 @@ class CartaoDePostagem2018
 			$t = $t-2;
 			$this->pdf->SetDrawColor(0,0,0);
 			$this->pdf->Line(0, $t, 106.36, $t);
-		
+
 			// Titulo do bloco: destinatario
 			$this->pdf->setFillColor(0,0,0);
 			$this->pdf->SetDrawColor(0,0,0);
 			$this->pdf->Rect(0, $t, 36, 5, 'F');
-			
+
 			$this->pdf->SetFont('', 'B');
 			$this->pdf->SetFontSize(11);
 			$this->pdf->SetTextColor(255,255,255);
 			$this->pdf->SetXY($l + 3, $t);
 			$this->t($w, $titulo, 2, '');
-			
+
 			$this->pdf->SetTextColor(0,0,0);
-			
+
 			$this->pdf->Image(realpath(dirname(__FILE__)) . '/logo-correios.png', 84, $t+1, 20, 4);
 
 			// Nome da pessoa
@@ -657,9 +665,9 @@ class CartaoDePostagem2018
 			$t = $t -1;
 			$this->pdf->SetDrawColor(0,0,0);
 			$this->pdf->Line(0, $t, 106.36, $t);
-			
+
 			$t++;
-			
+
 			// Titulo do bloco: destinatario ou remetente
 			$this->pdf->SetFont('', 'B');
 			$this->setFillColor(60, 60, 60);
@@ -672,6 +680,9 @@ class CartaoDePostagem2018
 			$this->setFillColor(190, 190, 190);
 			$this->pdf->SetXY(22, $t);
 			$this->multiLines($w, trim($nomeDestinatario), 'L');
+
+            //$this->pdf->Image('img/logo-text.png', 75, $t+6, 20);
+
 		}
 
         $w = $w - $addressPadding;
@@ -709,7 +720,7 @@ class CartaoDePostagem2018
 
 		return $this->pdf->GetY();
 	}
-	
+
 	private function setFillColor ($r, $g, $b)
 	{
 		$this->pdf->SetFillColor ($r, $g, $b);
@@ -720,7 +731,7 @@ class CartaoDePostagem2018
 		if ($utf8) {
 			$txt = $this->_($txt);
 		}
-		
+
 		$border = 0;
 		$fill = false;
 
