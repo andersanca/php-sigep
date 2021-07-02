@@ -86,8 +86,6 @@ class RastrearObjeto
         try {
             $soapReturn = SoapClientFactory::getRastreioObjetos()->buscaEventos($soapArgs);
 
-            debug($soapReturn);
-
             if ($soapReturn && is_object($soapReturn) && $soapReturn->return) {
 
                 try {
@@ -136,11 +134,11 @@ class RastrearObjeto
 
 
                                 $detalhes = '';
-                                if($ev->detalhe)
+                                if(isset($ev->detalhe))
                                     $detalhes = $ev->detalhe. ' ';
-                                if($ev->destino)
+                                if(isset($ev->destino))
                                     $detalhes .= 'Destino: '.$ev->destino->local . ' - '. $ev->destino->bairro . ' '.$ev->destino->cidade. '-'.$ev->destino->uf;
-                                if($ev->endereco)
+                                if(isset($ev->endereco))
                                     $detalhes .= ': '.$ev->endereco->logradouro .' '. $ev->endereco->numero .' '.$ev->endereco->bairro .' '.$ev->endereco->localidade . '-'. $ev->endereco->uf;
 
 
