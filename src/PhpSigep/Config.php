@@ -252,7 +252,7 @@ class Config extends DefaultStdClass
 
     /**
      * @param string $wsdlAgenciaWS
-     * 
+     *
      * @return $this;
      */
     public function setWsdlAgenciaWS($wsdlAgenciaWS)
