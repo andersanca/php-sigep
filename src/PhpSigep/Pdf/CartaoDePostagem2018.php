@@ -177,7 +177,7 @@ class CartaoDePostagem2018
 
             $this->setFillColor(222, 222, 222);
             if ($this->logoFile) {
-                $this->pdf->Image($this->logoFile, 5, ($this->pdf->GetY() + 2), 25, 25);
+                $this->pdf->Image($this->logoFile, 5, ($this->pdf->GetY() + 2), 25);
             }
 
             $nomeRemetente = $this->plp->getRemetente()->getNome();
@@ -680,6 +680,9 @@ class CartaoDePostagem2018
 			$this->setFillColor(190, 190, 190);
 			$this->pdf->SetXY(22, $t);
 			$this->multiLines($w, trim($nomeDestinatario), 'L');
+
+            //$this->pdf->Image('img/logo-text.png', 75, $t+6, 20);
+
 		}
 
         $w = $w - $addressPadding;

@@ -131,7 +131,22 @@ class RastrearObjeto
                                 $evento->setStatus($ev->status);
                                 $evento->setDataHora(\DateTime::createFromFormat('d/m/Y H:i', $ev->data . ' ' . $ev->hora));
                                 $evento->setDescricao(SoapClientFactory::convertEncoding($ev->descricao));
-                                $evento->setDetalhe(isset($ev->destino) ? $ev->destino : '');
+
+
+                                $detalhes = '';
+                                if(isset($ev->detalhe))
+                                    $detalhes = $ev->detalhe. ' ';
+                                if(isset($ev->destino))
+                                    $detalhes .= 'Destino: '.$ev->destino->local . ' - '. $ev->destino->bairro . ' '.$ev->destino->cidade. '-'.$ev->destino->uf;
+                                if(isset($ev->endereco))
+                                    $detalhes .= ': '.$ev->endereco->logradouro .' '. $ev->endereco->numero .' '.$ev->endereco->bairro .' '.$ev->endereco->localidade . '-'. $ev->endereco->uf;
+
+
+
+                                $evento->setDetalhe(SoapClientFactory::convertEncoding($detalhes));
+
+
+
                                 $evento->setLocal(SoapClientFactory::convertEncoding($ev->local));
                                 $evento->setCodigo($ev->codigo);
                                 $evento->setCidade(isset($ev->cidade) ? SoapClientFactory::convertEncoding($ev->cidade): '');
